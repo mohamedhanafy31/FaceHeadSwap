@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Reema Booth AI</title>
+    <style>
+        /* Modern CSS with enhanced accessibility */
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f8fafc;
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            line-height: 1.5;
+        }
+
+        .register-container {
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            width: min(90%, 400px);
+            margin: 1rem;
+            transition: transform 0.2s ease;
+        }
+
+        .register-container:hover {
+            transform: translateY(-0.25rem);
+        }
+
+        h2 {
+            color: #1e293b;
+            font-size: 1.875rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        #registerForm {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        input:focus {
+            outline: 2px solid transparent;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        input::placeholder {
+            color: #94a3b8;
+            opacity: 1;
+        }
+
+        button[type="submit"] {
+            background: #6366f1;
+            color: #fff;
+            padding: 0.875rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button[type="submit"]:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+
+        #message {
+            margin: 1.25rem 0;
+            padding: 0.875rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        .login-prompt {
+            text-align: center;
+            color: #64748b;
+            margin-top: 1.5rem;
+        }
+
+        .login-prompt a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .login-prompt a:hover {
+            color: #4f46e5;
+            text-decoration: underline;
+        }
+
+        /* Error/Success States */
+        .error {
+            background: #fff0f0;
+            color: #dc2626;
+            border: 1px solid #fed7d7;
+        }
+
+        .success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 1.5rem;
+                margin: 1rem;
+                border-radius: 0.75rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            input, button[type="submit"] {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Create Account</h2>
+        <form id="registerForm">
+            <input type="text" id="name" placeholder="Full Name" required aria-label="Full Name">
+            <input type="email" id="email" placeholder="Email Address" required aria-label="Email">
+            <input type="password" id="password" placeholder="Create Password" required aria-label="Password">
+            <button type="submit">Sign Up</button>
+        </form>
+        <div id="message" role="alert"></div>
+        <div class="login-prompt">
+            Already have an account? <a href="/static/login.html">Log in here</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const messageEl = document.getElementById('message');
+            messageEl.classList.remove('error', 'success');
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: document.getElementById('name').value,
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('password').value
+                    })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    messageEl.classList.add('success');
+                    messageEl.textContent = 'Registration successful! Redirecting...';
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('deviceKey', data.deviceKey);
+                    setTimeout(() => {
+                        window.location.href = '/static/index.html';
+                    }, 1500);
+                } else {
+                    messageEl.classList.add('error');
+                    messageEl.textContent = data.detail || 'Registration failed. Please try again.';
+                }
+            } catch (error) {
+                messageEl.classList.add('error');
+                messageEl.textContent = 'Network error. Please check your connection.';
+            }
+        });
+    </script>
+</body>
+</html>

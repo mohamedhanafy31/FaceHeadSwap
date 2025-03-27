@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Landing Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Element where setup.js will insert the welcome message and logout button -->
+    <div id="content"></div>
+
+    <div class="container">
+      <!-- Page 1 - Category and Image Selection -->
+      <div class="card page active" id="page1">
+        <div class="app-header">
+          <h1>Reema booth ai</h1>
+          <p class="app-subtitle">Transform yourself into iconic characters</p>
+        </div>
+        <div class="card-content">
+          <div id="remainingUploads"></div>
+          <!-- Upload container appears above the category selection -->
+          <div class="upload-container">
+            <div class="upload-content">
+              <!-- Left side: upload form and instructions -->
+              <div class="upload-left">
+                <p class="upload-message">
+                  Choose your template or drag and drop it
+                </p>
+                <form id="uploadForm">
+                  <input type="file" id="fileInput" name="file" required />
+                  <!-- Folder options: Gender radio buttons -->
+                  <div class="folder-options">
+                    <p>Select Gender:</p>
+                    <label
+                      ><input type="radio" name="gender" value="men" checked /> Men</label
+                    >
+                    <label
+                      ><input type="radio" name="gender" value="women" /> Women</label
+                    >
+                  </div>
+                  <!-- Folder options: Category drop-down -->
+                  <div class="folder-options">
+                    <p>Select Category:</p>
+                    <select id="typeCategory" name="typeCategory">
+                      <option value="classic">Classic</option>
+                      <option value="superhero">Superhero</option>
+                      <option value="civilization">Civilization</option>
+                      <option value="fantasy">Fantasy</option>
+                    </select>
+                  </div>
+                  <button type="submit">Upload Template</button>
+                </form>
+              </div>
+              <!-- Right side: preview area -->
+              <div class="upload-right">
+                <p class="preview-message">Preview</p>
+                <div id="filePreview"></div>
+              </div>
+            </div>
+            <div class="message" id="message"></div>
+          </div>
+
+          <h2>Choose Your Style</h2>
+          <div class="category-section">
+            <div class="category-pills">
+              <div class="category-pill active" data-category="classic">
+                Classic
+              </div>
+              <div class="category-pill" data-category="superhero">
+                Superhero
+              </div>
+              <div class="category-pill" data-category="civilization">
+                Civilization
+              </div>
+              <div class="category-pill" data-category="fantasy">
+                Fantasy
+              </div>
+            </div>
+            <div class="gender-filters">
+              <div class="category-pill active" data-gender="men">Men</div>
+              <div class="category-pill" data-gender="women">Women</div>
+            </div>
+            <div class="image-grid" id="imageGrid">
+              <!-- Images will be loaded dynamically -->
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button type="button" id="continueToCapture" disabled>
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page 2 - Webcam Capture -->
+      <div class="card page" id="page2">
+        <div class="app-header">
+          <h1>Capture Your Photo</h1>
+          <p class="app-subtitle">
+            Make sure your face is clearly visible
+          </p>
+        </div>
+        <div class="card-content">
+          <div id="backButton" class="back-button">Back to selection</div>
+          <div id="webcamContainer">
+            <video id="webcamVideo" autoplay playsinline></video>
+            <canvas id="captureCanvas" style="display:none;"></canvas>
+            <img class="capture-preview" id="capturePreview" alt="Capture preview" />
+            <div id="timerDisplay" style="display:none;">5</div>
+          </div>
+          <div class="button-group">
+            <button type="button" id="takeShot" class="btn-primary">
+              Take Shot
+            </button>
+            <button type="button" id="resetShot" class="btn-secondary" disabled>
+              Reset
+            </button>
+            <button type="button" id="confirmShot" class="btn-success" disabled>
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page 3 - Preview and Magic Button -->
+      <div class="card page" id="page3">
+        <div class="app-header">
+          <h1>Ready for Magic</h1>
+          <p class="app-subtitle">Let's transform your photo</p>
+        </div>
+        <div class="card-content">
+          <div class="preview-container">
+            <div class="preview-box">
+              <div class="preview-title">Source Style</div>
+              <img id="sourcePreview" alt="Source Image" />
+            </div>
+            <div class="preview-box">
+              <div class="preview-title">Your Photo</div>
+              <img id="targetPreview" alt="Your Photo" />
+            </div>
+          </div>
+          <!-- Mode Selection Section -->
+          <div class="mode-selection">
+            <label for="imageMode">Select Output Mode:</label>
+            <select id="imageMode">
+              <option value="portrait">Portrait</option>
+              <option value="landscape">Landscape</option>
+            </select>
+          </div>
+          <!-- Operation Selection -->
+          <div class="operation-selection">
+            <p>Choose your operation:</p>
+            <label
+              ><input type="radio" name="operation" value="face" checked /> Face
+              Swapping</label
+            >
+            <label
+              ><input type="radio" name="operation" value="head" /> Head Swapping</label
+            >
+          </div>
+          <div class="button-group">
+            <button type="button" id="makeMagic" class="btn-magic">
+              Make Magic
+            </button>
+          </div>
+          <div class="generating-message" id="generatingMessage">
+            <h3>✨ Magic is Generating ✨</h3>
+            <p>
+              Please wait while we work our magic... This might take a few seconds.
+            </p>
+          </div>
+          <!-- Result Container (initially hidden) -->
+          <div class="result-container" id="resultContainer" style="display: none;">
+            <div class="result-header">Magic Result</div>
+            <img id="finalResult" alt="Face Swap Result" />
+            <div class="result-actions">
+              <button type="button" id="printResult" class="btn-primary">
+                Print
+              </button>
+              <button type="button" id="downloadResult" class="btn-download">
+                Download
+              </button>
+              <button id="showQRCodeButton">Show QR Code</button>
+              <button type="button" id="redo" class="btn-secondary">
+                Start Over
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay">
+      <div class="spinner"></div>
+      <div id="loadingText">Processing your face swap...</div>
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+
+    <!-- QR Code Popup -->
+    <div id="qrCodePopup" class="popup">
+      <div class="popup-content">
+        <span class="close">&times;</span>
+        <div class="popup-header">Scan QR Code</div>
+        <div class="popup-body">
+          When you scan the QR code, the image will be downloaded automatically.
+        </div>
+        <!-- Add your QR Code image here -->
+        <img id="qrCodeImage" alt="QR Code" style="display:none;" />
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div id="errorMessage"></div>
+    <!-- Confetti Container -->
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <!-- Module scripts -->
+    <!-- Load main.js (which includes other module logic such as event listeners) -->
+    <script type="module" src="/static/js/main.js"></script>
+    <!-- Inline module to import and run setupApp from setup.js -->
+    <script type="module">
+      import { setupApp } from '/static/js/setup.js';
+      
+      document.addEventListener('DOMContentLoaded', () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          window.location.href = '/static/register.html';
+        } else {
+          setupApp();
+        }
+      });
+    </script>
+  </body>
+</html>

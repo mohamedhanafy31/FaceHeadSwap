@@ -1,0 +1,13 @@
+dockerfile1
+dockerfile2
+setup.py
+admin
+login_logs
+manage_key_collection.py
+installGUI.py
+.onnx
+app\HeadSwap\pretrained_models
+__pycache__
+inswapper_128.onnx
+app/HeadSwap
+remmabooth-ai-firebase-adminsdk-fbsvc-b8bae9300c.json
